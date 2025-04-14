@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prática de Verbos Irregulares em Inglês</title>
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3a0ca3;
+            --success-color: #4cc9f0;
+            --danger-color: #f72585;
+            --light-color: #f8f9fa;
+            --dark-color: #212529;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 90%;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            transition: all 0.3s ease;
+        }
+
+        h1 {
+            color: var(--secondary-color);
+            text-align: center;
+            margin-bottom: 1.5rem;
+            font-size: 2.2rem;
+        }
+
+        .subtitle {
+            color: #666;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .screen {
+            display: none;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .screen.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Start Screen Styles */
+        .start-screen {
+            text-align: center;
+        }
+
+        .numbers-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        .number-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: 2px solid var(--primary-color);
+            background-color: white;
+            font-size: 1.3rem;
+            color: var(--primary-color);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .number-btn:hover {
+            background-color: var(--primary-color);
+            color: white;
+            transform: scale(1.1);
+        }
+
+        /* Challenge Screen Styles */
+        .challenge-screen {
+            text-align: center;
+        }
+
+        .verb-display {
+            font-size: 2.5rem;
+            color: var(--secondary-color);
+            margin-bottom: 1.5rem;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+
+        .instruction {
+            color: #555;
+            margin-bottom: 25px;
+            font-size: 1.1rem;
+        }
+
+        .form-control {
+            width: 100%;
+            max-width: 350px;
+            margin: 0 auto;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1.2rem;
+            text-align: center;
+            transition: border-color 0.3s;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        .btn {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            margin: 20px 10px;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-3px);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .btn-outline:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .feedback {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            font-weight: bold;
+            display: none;
+        }
+
+        .success {
+            background-color: rgba(76, 201, 240, 0.15);
+            color: var(--success-color);
+            border: 1px solid var(--success-color);
+        }
+
+        .error {
+            background-color: rgba(247, 37, 133, 0.15);
+            color: var(--danger-color);
+            border: 1px solid var(--danger-color);
+        }
+
+        .attempts {
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 20px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background-color: #eee;
+            border-radius: 4px;
+            margin-top: 30px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress {
+            height: 100%;
+            background-color: var(--primary-color);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 10px;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        /* History Screen Styles */
+        .history-screen {
+            text-align: center;
+        }
+
+        .history-list {
+            max-height: 300px;
+            overflow-y: auto;
+            margin: 20px 0;
+            padding: 10px;
+            border: 1px solid #eee;
+            border-radius: 8px;
+        }
+
+        .history-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .history-item:last-child {
+            border-bottom: none;
+        }
+
+        .correct {
+            color: var(--success-color);
+        }
+
+        .incorrect {
+            color: var(--danger-color);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .container {
+                width: 95%;
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            .verb-display {
+                font-size: 2rem;
+            }
+
+            .number-btn {
+                width: 50px;
+                height: 50px;
+                font-size: 1.1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 15px;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            .numbers-container {
+                gap: 10px;
+            }
+
+            .number-btn {
+                width: 40px;
+                height: 40px;
+                font-size: 1rem;
+            }
+
+            .verb-display {
+                font-size: 1.7rem;
+            }
+
+            .btn {
+                padding: 10px 20px;
+                font-size: 0.9rem;
+            }
+        }
+
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: #f00;
+            border-radius: 50%;
+            pointer-events: none;
+            animation: fall 3s linear forwards;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(100vh);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Start Screen -->
+        <div class="screen start-screen active" id="startScreen">
+            <h1>Prática de Verbos Irregulares em Inglês</h1>
+            <p class="subtitle">Selecione um número para receber um verbo irregular para praticar</p>
+            
+            <div class="numbers-container">
+                <button class="number-btn" data-number="1">1</button>
+                <button class="number-btn" data-number="2">2</button>
+                <button class="number-btn" data-number="3">3</button>
+                <button class="number-btn" data-number="4">4</button>
+                <button class="number-btn" data-number="5">5</button>
+                <button class="number-btn" data-number="6">6</button>
+                <button class="number-btn" data-number="7">7</button>
+                <button class="number-btn" data-number="8">8</button>
+                <button class="number-btn" data-number="9">9</button>
+                <button class="number-btn" data-number="10">10</button>
+            </div>
+            
+            <button class="btn" id="historyBtn">Ver Histórico</button>
+        </div>
+        
+        <!-- Challenge Screen -->
+        <div class="screen challenge-screen" id="challengeScreen">
+            <h1>Desafio de Soletração</h1>
+            <div class="verb-display" id="verbDisplay">go</div>
+            <p class="instruction">Digite a forma do verbo no Simple Past (passado simples):</p>
+            
+            <input type="text" class="form-control" id="userAnswer" placeholder="Digite sua resposta...">
+            
+            <div class="feedback" id="feedback"></div>
+            <p class="attempts" id="attempts">Tentativas: 0</p>
+            
+            <div class="buttons-container">
+                <button class="btn" id="checkBtn">Verificar</button>
+                <button class="btn btn-outline" id="newVerbBtn">Novo Verbo</button>
+                <button class="btn btn-outline" id="backBtn">Voltar</button>
+            </div>
+            
+            <div class="progress-bar">
+                <div class="progress" id="progress"></div>
+            </div>
+            
+            <div class="stats">
+                <span id="correctCount">Acertos: 0</span>
+                <span id="totalCount">Total: 0</span>
+            </div>
+        </div>
+        
+        <!-- History Screen -->
+        <div class="screen history-screen" id="historyScreen">
+            <h1>Seu Histórico</h1>
+            <div class="history-list" id="historyList">
+                <p>Seu histórico aparecerá aqui quando você completar desafios.</p>
+            </div>
+            
+            <button class="btn" id="backToStartBtn">Voltar ao Início</button>
+        </div>
+    </div>
+
+    <script>
+        // Definição de verbos irregulares (infinitivo => simple past)
+        const irregularVerbs = {
+            1: { infinitive: "go", pastSimple: "went" },
+            2: { infinitive: "see", pastSimple: "saw" },
+            3: { infinitive: "do", pastSimple: "did" },
+            4: { infinitive: "make", pastSimple: "made" },
+            5: { infinitive: "take", pastSimple: "took" },
+            6: { infinitive: "come", pastSimple: "came" },
+            7: { infinitive: "get", pastSimple: "got" },
+            8: { infinitive: "know", pastSimple: "knew" },
+            9: { infinitive: "give", pastSimple: "gave" },
+            10: { infinitive: "find", pastSimple: "found" }
+        };
+
+        // Seleção de elementos DOM
+        const startScreen = document.getElementById('startScreen');
+        const challengeScreen = document.getElementById('challengeScreen');
+        const historyScreen = document.getElementById('historyScreen');
+        const numberBtns = document.querySelectorAll('.number-btn');
+        const verbDisplay = document.getElementById('verbDisplay');
+        const userAnswer = document.getElementById('userAnswer');
+        const feedback = document.getElementById('feedback');
+        const attempts = document.getElementById('attempts');
+        const checkBtn = document.getElementById('checkBtn');
+        const newVerbBtn = document.getElementById('newVerbBtn');
+        const backBtn = document.getElementById('backBtn');
+        const historyBtn = document.getElementById('historyBtn');
+        const backToStartBtn = document.getElementById('backToStartBtn');
+        const historyList = document.getElementById('historyList');
+        const progress = document.getElementById('progress');
+        const correctCount = document.getElementById('correctCount');
+        const totalCount = document.getElementById('totalCount');
+
+        // Variáveis globais de estado
+        let currentVerb = null;
+        let attemptCount = 0;
+        let userStats = { correct: 0, total: 0 };
+        let history = [];
+
+        // Inicialização
+        function init() {
+            // Carregar estatísticas e histórico do localStorage
+            loadUserData();
+            
+            // Atualizar contadores
+            updateCounters();
+            
+            // Configurar listeners para os botões de número
+            numberBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const selectedNumber = parseInt(btn.dataset.number);
+                    startChallenge(selectedNumber);
+                });
+            });
+            
+            // Configurar outros listeners
+            checkBtn.addEventListener('click', checkAnswer);
+            newVerbBtn.addEventListener('click', () => showScreen(startScreen));
+            backBtn.addEventListener('click', () => showScreen(startScreen));
+            historyBtn.addEventListener('click', () => {
+                renderHistory();
+                showScreen(historyScreen);
+            });
+            backToStartBtn.addEventListener('click', () => showScreen(startScreen));
+            
+            // Permitir tecla Enter para enviar resposta
+            userAnswer.addEventListener('keyup', (e) => {
+                if (e.key === 'Enter') {
+                    checkAnswer();
+                }
+            });
+        }
+
+        // Iniciar o desafio com um número selecionado
+        function startChallenge(number) {
+            currentVerb = irregularVerbs[number];
+            verbDisplay.textContent = currentVerb.infinitive;
+            userAnswer.value = '';
+            feedback.style.display = 'none';
+            attemptCount = 0;
+            attempts.textContent = `Tentativas: ${attemptCount}`;
+            
+            showScreen(challengeScreen);
+            userAnswer.focus();
+        }
+
+        // Verificar a resposta do usuário
+        function checkAnswer() {
+            attemptCount++;
+            attempts.textContent = `Tentativas: ${attemptCount}`;
+            
+            const answer = userAnswer.value.trim().toLowerCase();
+            
+            if (answer === currentVerb.pastSimple) {
+                showSuccess();
+                createConfetti();
+                userStats.correct++;
+                userStats.total++;
+                addToHistory(currentVerb.infinitive, answer, true);
+            } else {
+                if (attemptCount >= 3) {
+                    showError(`Não foi dessa vez. A resposta correta é: ${currentVerb.pastSimple}`);
+                    userStats.total++;
+                    addToHistory(currentVerb.infinitive, answer, false);
+                } else {
+                    showError("Tente novamente!");
+                }
+            }
+            
+            updateCounters();
+            saveUserData();
+        }
+
+        // Mostrar mensagem de sucesso
+        function showSuccess() {
+            feedback.className = 'feedback success';
+            feedback.textContent = '✓ Correto! Parabéns!';
+            feedback.style.display = 'block';
+            
+            // Desabilitar campos de entrada após acerto
+            userAnswer.disabled = true;
+            checkBtn.disabled = true;
+        }
+
+        // Mostrar mensagem de erro
+        function showError(message) {
+            feedback.className = 'feedback error';
+            feedback.textContent = `✗ ${message}`;
+            feedback.style.display = 'block';
+            
+            // Desabilitar campos se mostrou a resposta
+            if (attemptCount >= 3) {
+                userAnswer.disabled = true;
+                checkBtn.disabled = true;
+            }
+        }
+
+        // Adicionar ao histórico
+        function addToHistory(verb, answer, isCorrect) {
+            history.unshift({
+                verb: verb,
+                answer: answer,
+                correct: isCorrect,
+                date: new Date().toLocaleString()
+            });
+            
+            // Limitar o histórico a 50 entradas
+            if (history.length > 50) {
+                history.pop();
+            }
+        }
+
+        // Renderizar o histórico
+        function renderHistory() {
+            if (history.length === 0) {
+                historyList.innerHTML = '<p>Seu histórico aparecerá aqui quando você completar desafios.</p>';
+                return;
+            }
+            
+            let html = '';
+            history.forEach(item => {
+                html += `
+                <div class="history-item">
+                    <span>${item.verb} → ${item.answer}</span>
+                    <span class="${item.correct ? 'correct' : 'incorrect'}">
+                        ${item.correct ? '✓' : '✗'}
+                    </span>
+                </div>`;
+            });
+            
+            historyList.innerHTML = html;
+        }
+
+        // Atualizando contadores e barra de progresso
+        function updateCounters() {
+            correctCount.textContent = `Acertos: ${userStats.correct}`;
+            totalCount.textContent = `Total: ${userStats.total}`;
+            
+            // Atualizar barra de progresso
+            const progressPercentage = userStats.total > 0 
+                ? (userStats.correct / userStats.total) * 100 
+                : 0;
+            progress.style.width = `${progressPercentage}%`;
+        }
+
+        // Salvar dados do usuário
+        function saveUserData() {
+            localStorage.setItem('verbChallengeStats', JSON.stringify(userStats));
+            localStorage.setItem('verbChallengeHistory', JSON.stringify(history));
+        }
+
+        // Carregar dados do usuário
+        function loadUserData() {
+            const savedStats = localStorage.getItem('verbChallengeStats');
+            const savedHistory = localStorage.getItem('verbChallengeHistory');
+            
+            if (savedStats) {
+                userStats = JSON.parse(savedStats);
+            }
+            
+            if (savedHistory) {
+                history = JSON.parse(savedHistory);
+            }
+        }
+
+        // Trocar de tela
+        function showScreen(screen) {
+            // Resetar o estado dos campos
+            userAnswer.disabled = false;
+            checkBtn.disabled = false;
+            
+            // Esconder todas as telas
+            document.querySelectorAll('.screen').forEach(s => {
+                s.classList.remove('active');
+            });
+            
+            // Mostrar a tela selecionada
+            screen.classList.add('active');
+        }
+
+        // Criar efeito de confetti para celebrar o acerto
+        function createConfetti() {
+            const confettiCount = 100;
+            const colors = ['#f72585', '#4361ee', '#4cc9f0', '#3a0ca3', '#7209b7'];
+            
+            for (let i = 0; i < confettiCount; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                
+                // Posição aleatória
+                const x = Math.random() * window.innerWidth;
+                const y = -10;
+                
+                // Cor aleatória do array de cores
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                
+                // Tamanho aleatório
+                const size = Math.random() * 10 + 5;
+                
+                // Aplicar estilos
+                confetti.style.backgroundColor = color;
+                confetti.style.width = `${size}px`;
+                confetti.style.height = `${size}px`;
+                confetti.style.left = `${x}px`;
+                confetti.style.top = `${y}px`;
+                
+                // Adicionar ao body
+                document.body.appendChild(confetti);
+                
+                // Remover após a animação
+                setTimeout(() => {
+                    confetti.remove();
+                }, 3000);
+            }
+        }
+
+        // Inicializar o aplicativo
+        init();
+    </script>
+</body>
+</html>
